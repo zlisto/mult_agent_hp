@@ -1,8 +1,8 @@
-# mult_agent_hp — Headmaster Labubledore
+# mult_agent_hp — Harry Potter multi-agent class starter
 
-Class demo: a **Harry Potter multi-agent** app. Chat with boss Labubu **Headmaster Labubledore**; he delegates to **7 book specialist Labubus** (one per novel). Specialists answer from **retrieved chunks** of a local `harrypotter.db` (full books stay out of the system prompt).
+Chat app with a **boss agent** and **book specialist workers** (one per Harry Potter novel). The React front end and FastAPI routes are already here. In class you build the PydanticAI backend (models, retrieval helpers, agents, prompts).
 
-> **Corpus not in this repo.** Per-book PDFs and `harrypotter.db` are copyrighted and must stay on your machine. Place them locally (see below) before running.
+`harrypotter.db` is included at the project root (SQLite `books` table with per-novel text). Use chunk retrieval — do not dump whole novels into prompts.
 
 ## Quick start
 
@@ -15,36 +15,7 @@ PORTKEY_API_KEY=your_key
 MODEL_NAME=gpt-6-astra
 ```
 
-### 2. Local book data
-
-Expected layout (gitignored):
-
-```
-harrypotter.db          # SQLite with books table (full text + token_count)
-books/
-  01_sorcerers_stone.pdf
-  02_chamber_of_secrets.pdf
-  …
-  07_deathly_hallows.pdf
-```
-
-Build `harrypotter.db` from your own legally obtained per-book PDFs with a local extract script (tokenizer `o200k_base`). Schema:
-
-```sql
-CREATE TABLE books (
-  id INTEGER PRIMARY KEY,
-  book_number INTEGER NOT NULL UNIQUE,
-  title TEXT NOT NULL,
-  source_pdf TEXT NOT NULL,
-  page_count INTEGER NOT NULL,
-  char_count INTEGER NOT NULL,
-  token_count INTEGER NOT NULL,
-  tokenizer TEXT NOT NULL,
-  text TEXT NOT NULL
-);
-```
-
-### 3. Backend
+### 2. Backend
 
 ```powershell
 cd backend
@@ -54,9 +25,7 @@ pip install -r requirements.txt
 uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Health: http://127.0.0.1:8000/api/health
-
-### 4. Frontend
+### 3. Frontend
 
 ```powershell
 cd frontend
@@ -66,15 +35,16 @@ npm run dev
 
 Open http://127.0.0.1:5173 — Vite proxies `/api` to port 8000.
 
-If the API is on **8001**, set `frontend/.env`:
+## What you build
 
-```
-VITE_API_BASE=http://127.0.0.1:8001
-```
+`backend/main.py` and `backend/requirements.txt` are provided. Fill in:
 
-## Good test question
+- `models.py`
+- `retrieval.py` (chunk helpers for `harrypotter.db`)
+- `agents/` (`config.py`, `boss.py`, `specialists.py`)
+- `prompts/` (`boss.md`, `specialist.md`)
 
-> For each Horcrux, when and how is it found or destroyed across the books?
+Use the course vibe coding prompt for details.
 
 ## Layout
 
@@ -82,8 +52,13 @@ VITE_API_BASE=http://127.0.0.1:8001
 mult_agent_hp/
   .env.example
   README.md
-  backend/          # FastAPI + PydanticAI
-  frontend/         # Vite React + Labubu SVG cast
-  books/            # local PDFs only (gitignored)
-  harrypotter.db    # local SQLite only (gitignored)
+  harrypotter.db
+  backend/
+    main.py
+    requirements.txt
+    models.py
+    retrieval.py
+    agents/
+    prompts/
+  frontend/
 ```

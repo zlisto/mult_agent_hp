@@ -1,7 +1,7 @@
-"""Headmaster Labubledore — Harry Potter multi-agent demo API.
+"""Harry Potter multi-agent API — routes only.
 
 Run from this directory:
-  uvicorn main:app --reload --port 8000
+  uvicorn main:app --reload --host 127.0.0.1 --port 8000
 
 Frontend (Vite): http://127.0.0.1:5173
 """
@@ -29,7 +29,7 @@ load_dotenv(ROOT.parent / ".env")
 
 BACKEND_PORT = int(os.getenv("BACKEND_PORT", "8000"))
 
-app = FastAPI(title="Headmaster Labubledore", version="0.1.0")
+app = FastAPI(title="Harry Potter Multi-Agent", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -66,7 +66,7 @@ def health():
 
 @app.get("/api/roster")
 def roster():
-    """Boss + specialist roster for the frontend Labubu viz."""
+    """Boss + specialist roster for the frontend."""
     db_books = {b["book_number"]: b for b in list_books()}
     specialists = []
     for b in BOOK_CATALOG:
